@@ -323,7 +323,9 @@
       </div>
     </div>
   </div>
-
+    <audio id="bg-music" loop>
+  <source src="audio/ytmp3free.cc_kubo-edit-yeu-nhieu-ghen-nhieu-lofi-edit-rlw-youtubemp3free.org.mp3" type="audio/mpeg">
+  </audio>
   <script>
     const confession = `hello bbi iu của abé nhó!!  
 mình tìm hiểu cũng 1 tháng đã trôi qua rồi ý😍,  
@@ -348,6 +350,19 @@ abé khang`;
       launchHearts(); // thêm hiệu ứng trái tim
     });
 
+    seeBtn.addEventListener('click', () => {
+  card.classList.add('is-flipped');
+  startTyping(confession, typedEl, 60);
+  launchHearts(); // thêm hiệu ứng trái tim
+
+  // phát nhạc khi nhấn nút
+  const music = document.getElementById('bg-music');
+  if (music) {
+    music.play().catch(err => {
+      console.log("Trình duyệt chặn autoplay:", err);
+    });
+  }
+});
     backBtn.addEventListener('click', () => {
       card.classList.remove('is-flipped');
       typedEl.innerHTML = '';

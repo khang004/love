@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>tỏ tình</title>
+  <style>
+    :root {
+      --bg: #d59da8;/* nền hồng nhạt */
+      --card: #d69a9a; /* thẻ trắng */
+      --accent: #ff4d6d;/* màu nút & nhấn: hồng đậm/trái tim */
+      --text: #b40bfd;/* màu chữ */
+      --maxw: 780px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: Inter, 'Segoe UI', Roboto, Arial;
+      background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      overflow: hidden
+    }
+    .wrap {
+      width: 100%;
+      max-width: var(--maxw)
+    }
+
+    .card-scene {
+      perspective: 1200px
+    }
+
+    .card {
+      width: 100%;
+      height: 460px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 800ms cubic-bezier(.2, .8, .2, 1);
+      margin: 0 auto
+    }
+
+    .card__face {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(15, 15, 15, .12);
+      background: var(--card);
+      backface-visibility: hidden
+    }
+
+    .card__front {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fff 0%, #ffeef1 100%);
+      padding: 20px
+    }
+
+    .rotating-wrap {
+      width: 90%;
+      max-width: 520px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1500px;
+      margin-bottom: 20px
+    }
+
+    .photo-3d {
+      width: 120%;
+      height: 110%;
+      border-radius: 16px;
+      background-image: linear-gradient(180deg, rgba(0, 0, 0, .06), rgba(0, 0, 0, .02)), url('/bbi.jpg');
+      background-size: cover;
+      background-position: center;
+      transform-style: preserve-3d;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .15);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      transition: transform 200ms ease
+    }
+
+    @keyframes slow-rotate {
+      0% {
+        transform: rotateY(-12deg) rotateX(6deg) translateZ(0)
+      }
+
+      50% {
+        transform: rotateY(12deg) rotateX(-6deg) translateZ(6px)
+      }
+
+      100% {
+        transform: rotateY(-12deg) rotateX(6deg) translateZ(0)
+      }
+    }
+
+    .photo-3d {
+      animation: slow-rotate 6s ease-in-out infinite
+    }
+
+    .photo-caption {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, .7);
+      backdrop-filter: blur(4px);
+      text-align: center;
+      border-radius: 0 0 16px 16px
+    }
+
+    .photo-caption h3 {
+      margin: 0;
+      font-size: 18px
+    }
+
+    .photo-caption p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: #444
+    }
+
+    .btn-see {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 12px 22px;
+      font-weight: 600;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(255, 107, 129, .24)
+    }
+
+    .card__back {
+      transform: rotateY(180deg);
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px
+    }
+
+    .letter {
+      flex: 1;
+      background: linear-gradient(180deg, #fff, #fff);
+      border-radius: 12px;
+      padding: 26px;
+      box-shadow: inset 0 1px 0 rgba(0, 0, 0, .02);
+      overflow: auto
+    }
+
+    .to-line {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px
+    }
+
+    .letter-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 25px;
+      margin-bottom: 12px
+    }
+
+    .letter-body {
+      font-size: 15px;
+      line-height: 1.65;
+      white-space: pre-wrap
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer
+    }
+
+    .btn-send {
+      margin-left: auto;
+      background: linear-gradient(90deg, var(--accent), #ff8aa0);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer
+    }
+
+    .card.is-flipped {
+      transform: rotateY(180deg)
+    }
+
+    .typed {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid rgba(0, 0, 0, .12);
+      animation: blink 900ms steps(1) infinite
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent
+      }
+    }
+
+    /* Hiệu ứng trái tim */
+    .heart {
+      position: fixed;
+      bottom: 20px;
+      font-size: 20px;
+      color: red;
+      animation: fly 10s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: translateY(-150px) scale(1.3);
+        opacity: .7;
+      }
+
+      100% {
+        transform: translateY(-300px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width:480px){
+  body{
+    padding:10px;
+  }
+  .photo-3d{
+    width:100%;
+    height:180px;
+    border-radius:12px;
+  }
+  .photo-caption h3{
+    font-size:15px;
+  }
+  .photo-caption p{
+    font-size:12px;
+  }
+  .btn-see{
+    padding:10px 16px;
+    font-size:14px;
+  }
+  .card__back{
+    padding:16px;
+  }
+  .letter{
+    padding:12px;
+    font-size:14px;
+  }
+  .letter-title{
+    font-size:16px;
+  }
+  .controls{
+    flex-direction:column;
+    gap:8px;
+  }
+  .btn-back, .btn-send{
+    width:100%;
+    text-align:center;
+    font-size:15px;
+    padding:12px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card-scene">
+      <div class="card" id="card">
+
+        <!-- FRONT -->
+        <div class="card__face card__front">
+          <div class="rotating-wrap">
+            <div class="photo-3d" id="photo3d" aria-hidden="true">
+              <div class="photo-caption">
+                <h3>Gửi cho Bbi Kỳ kỳ iu dấu của abé nè😘</h3>
+                <p>Ấn "Xem tiếp" để mở lá thư.</p>
+              </div>
+            </div>
+          </div>
+          <button class="btn-see" id="seeBtn">Xem tiếp ❤️</button>
+        </div>
+
+        <!-- BACK -->
+        <div class="card__face card__back">
+          <div class="letter">
+            <div class="to-line">Gửi: <strong id="recipient"></strong></div>
+            <div class="letter-title">Lá thư này là của abé Khang có điều muốn nói với Bbi Kỳ Kỳ hôm nay</div>
+            <div class="letter-body"><span id="typedText" class="typed"></span>💕</div>
+          </div>
+
+          <div class="controls">
+            <button class="btn-back" id="backBtn">Quay lại</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const confession = `hello bbi iu của abé nhó!!  
+mình tìm hiểu cũng 1 tháng đã trôi qua rồi ý😍,  
+abé cảm thấy abé với bbi iu cũng có cái gì đó gọi là hợp tính ý🤪...  
+và có tình cảm với Bbi sau những ngày tìm hiểu nhau ă😜
+với cả abé với bbi cũng ai chưa có người yêu á hỏng ấy  
+bbi cho abé một cơ hội làm người yêu bbi nhá❤️
+
+  ký tên
+abé khang`;
+
+    const card = document.getElementById('card');
+    const seeBtn = document.getElementById('seeBtn');
+    const backBtn = document.getElementById('backBtn');
+    const typedEl = document.getElementById('typedText');
+
+    document.getElementById('recipient').textContent = 'Đến Crush iu dấu cute của bé Khang';
+
+    seeBtn.addEventListener('click', () => {
+      card.classList.add('is-flipped');
+      startTyping(confession, typedEl, 60);
+      launchHearts(); // thêm hiệu ứng trái tim
+    });
+
+    backBtn.addEventListener('click', () => {
+      card.classList.remove('is-flipped');
+      typedEl.innerHTML = '';
+    });
+
+    let typingTimer = null;
+    function startTyping(text, el, speed) {
+      if (typingTimer) clearInterval(typingTimer);
+      el.innerHTML = '';
+      let i = 0;
+      typingTimer = setInterval(() => {
+        if (i >= text.length) {
+          clearInterval(typingTimer);
+          typingTimer = null;
+          el.classList.remove('typed');
+          return;
+        }
+        const char = text[i++];
+        if (char === '\n') {
+          el.innerHTML += '<br>';
+        } else {
+          el.innerHTML += char;
+        }
+      }, speed);
+      el.classList.add('typed');
+    }
+
+    // Hiệu ứng trái tim bay
+    function launchHearts() {
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'heart';
+          heart.textContent = '❤️';
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.fontSize = (16 + Math.random() * 24) + 'px';
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 10000);
+        }, i * 300);
+      }
+    }
+
+    const photo = document.getElementById('photo3d');
+    document.querySelector('.rotating-wrap').addEventListener('pointermove', (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const dx = (e.clientX - rect.left) / rect.width - 0.5;
+      const dy = (e.clientY - rect.top) / rect.height - 0.5;
+      const rx = -dy * 10; const ry = dx * 18;
+      photo.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+    });
+    document.querySelector('.rotating-wrap').addEventListener('pointerleave', () => { photo.style.transform = '' });
+
+  </script>
+</body>
+
+</html>
